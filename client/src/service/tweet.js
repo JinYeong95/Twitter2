@@ -1,16 +1,16 @@
 export default class TweetService {
- // 네트워크를 통해 데이터 가져오기 시작
   constructor(http){
     this.http = http;
   }
+// 네트워크를 통해 데이터 가져오기 시작
 
   async getTweets(username) {
     const query = username ? `?username=${username}` : '';
     return this.http.fetch(`/tweets${query}`, {
       method: 'GET'
-    });                // fetch 메소드 ? :: async 14줄부터 계속
+    });                
   }
-
+// fetch 메소드 ? :: async 14줄부터 계속
   async postTweet(text) {
     return this.http.fetch(`/tweets`, {
       method: 'POST',
