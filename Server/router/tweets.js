@@ -1,9 +1,11 @@
 import express from 'express';
 import * as tweetController from '../controller/tweet.js';
-import {body} from 'express-validator';
+import { body } from 'express-validator';
 import { isAuth } from '../middleware/auth.js';
-import {validate} from '../middleware/validator.js';
+import { validate } from '../middleware/validator.js';
+
 const router = express.Router();
+
 
 const validateTweet = [
     body('text')

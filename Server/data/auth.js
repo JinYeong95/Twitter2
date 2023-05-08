@@ -16,7 +16,7 @@ export async function findByUsername(username){
 }
 
 export async function createUser(user){
-    const created = { ...user, id:Date.now().toString()};
+    const created = { ...user, id: Date.now().toString() };
     users.push(created);
     return created.id;
 }

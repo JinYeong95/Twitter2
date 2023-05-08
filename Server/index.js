@@ -1,4 +1,4 @@
-import express, { Router } from "express"; // 터미널에 npm i express
+import express from "express"; // 터미널에 npm i express
 import cors from "cors"; // npm i cors
 import morgan from "morgan";  // npm i morgan
 import tweetsRouter from "./router/tweets.js";
@@ -17,7 +17,7 @@ app.use((req,res,next) => {
     res.sendStatus(404);
 });
 
-app.use((error, req, next) => {
+app.use((error, req, res, next) => {
     console.log(error);
     res.sendStatus(500);
 })
