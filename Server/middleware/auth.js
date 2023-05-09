@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as userRepository from '../data/auth.js';
+import { config } from '../config.js';
 
 const AUTH_ERROR = { message:'인증 에러!'};
 
@@ -12,7 +13,7 @@ export const isAuth = async (req, res, next) => {
     const token = authHeader.split(' ')[1]; // 헤더에서 토큰값만 떼옴, verfication 하면 사용자 
     jwt.verify(
         token,
-        't0nP%yfzjeG6IkpVDlZJs@Rgq5u#^dka',
+        config.jwt.secret, // 이전에는 .env에 있던 t0nP%yfzjeG6IkpVDlZJs@Rgq5u#^dka 라는 값이였음
         async (error, decoded) => {
             if(error){
                 return res.status(401).json(AUTH_ERROR);

@@ -1,5 +1,3 @@
-// abcd1234:
-
 let users = [
     {
         id: '1',
