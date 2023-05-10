@@ -1,7 +1,6 @@
 import express from 'express';
 import * as tweetController from '../controller/tweet.js';
 import { body } from 'express-validator';
-import { isAuth } from '../middleware/auth.js';
 import { validate } from '../middleware/validator.js';
 
 const router = express.Router();
@@ -14,6 +13,11 @@ const validateTweet = [
     .withMessage('text는 4자 이상 입력하세요!'),
     validate
 ];
+
+const app = express();
+app.use(express.json());
+
+import { isAuth} from '../middleware/auth.js';
 // GET (하나씩 하나씩 REST.API를 만들어감)
 // /tweets?username=:username
 router.get('/', isAuth, tweetController.getTweets);
