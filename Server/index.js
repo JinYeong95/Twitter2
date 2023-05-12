@@ -5,7 +5,7 @@ import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
-import { sequelize } from "./db/database.js";
+import { connectDB } from "./db/database.js";
 // import {db} from "./db/database.js";
 
 
@@ -18,7 +18,7 @@ app.use(morgan('tiny')); // 사용자들이 들어오면 콘솔에 찍어줌
 app.use('/tweets', tweetsRouter);
 app.use('/auth', authRouter);
 
-app.use((req,res,next) => {
+app.use((req,res) => {
     res.sendStatus(404);
 });
 
@@ -27,10 +27,7 @@ app.use((error, req, res, next) => {
     res.sendStatus(500);
 });
 
-// db.getConnection().then((connection) => console.log(connection));
-
-sequelize.sync().then((client) => {
-    // console.log(client);
+connectDB().then(() => {
     const server = app.listen(config.host.port);
     initSocket(server);
-})
+}).catch(console.error);

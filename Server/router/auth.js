@@ -1,16 +1,5 @@
-/*
-    회원가입 -> post, /signup
-    name: 빈문자 허용 안됨(notEmpty())
-    email: 이메일형식체크, 모두 소문자
-    url: URL체크(isURL())
-
-    로그인 -> post, /login
-    username: 공백X, 빈문자X
-    password: 공백X, 최소 4자이상
-*/
-
 import express from 'express';
-import * as tweetController from '../controller/tweet.js';
+import { isAuth } from '../middleware/auth.js';
 import {body} from 'express-validator';
 import {validate} from '../middleware/validator.js';
 import * as authController from '../controller/auth.js';
@@ -43,8 +32,6 @@ const validateSignup = [
 router.post('/signup', validateSignup, authController.signup);
 
 router.post('/login', validateCredential, authController.login);
-
-import { isAuth } from '../middleware/auth.js';
 
 router.get('/me', isAuth, authController.me);
 

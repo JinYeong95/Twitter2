@@ -1,72 +1,36 @@
-// let users = [
-//     {
-//         id: '1',
-//         username: 'melon',
-//         password: '$2b$10$4Kh.GWN1MvJdWgWRNznDy.TPaQqdXITkBaMe9.xvgcFIhHLvi/5IC',
-//         name:'이메론',
-//         email:'melon@melon.com',
-//         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS87Gr4eFO7Pt2pE8oym4dxXnxGZYL2Pl_N5A&usqp=CAU'
-//     }
-// ];
-// import { db } from '../db/database.js';
-import SQ from 'sequelize';
-import { sequelize } from '../db/database.js';
-const DataTypes = SQ.DataTypes;
+import { getUsers } from "../db/database.js";
+import MongoDb  from "mongodb"; 
+const ObjectID = MongoDb.ObjectId;
 
-export const User = sequelize.define(
-    'user',
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true
-        },
-        username: {
-            type: DataTypes.STRING(45),
-            allowNull: false
-        },
-        password: {
-            type: DataTypes.STRING(128),
-            allowNull: false
-        },
-        name : {
-            type: DataTypes.STRING(45),
-            allowNull: false
-        },
-        email: {
-            type: DataTypes.STRING(128),
-            allowNull: false
-        },
-        url: DataTypes.TEXT,
-        regdate: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
-        }
-        // regdate : 날짜타입, 현재시간을 자동으로 등록
-    },
-    { timestamps: false }
-)
+/* 
+    { ... }
+    { ObjectID: asdasdaskldm, userid: 'apple', name: '김사과' }
+    { userid: 'apple', name: '김사과' }
 
+*/ 
+// 몽고디비에는 다른 아이디와 구별해주기 위해 objectid라는 것이 들어간다
 
 export async function findByUsername(username){
-    // return users.find((user) => user.username === username);
-    return User.findOne({where: { username }}); // 조건이 username인 것만 찾아달라
+    return getUsers().find({username})
+    .next()
+    .then(mapOptionalUser);
 }
 
 export async function createUser(user){
-    return User.create(user).then((data) => data.dataValues.id); // 해당 데이터를 받아 datavalues의 id를 받게 되면 
-    
-    // const {username, password, name, email, url} = user;
-    // return db.execute('insert into users (username, password, name, email, url) values (?, ?, ?, ?, ?)', [username, password, name, email, url]).then((result) => result[0].insertId);
-
-    // const created = { ...user, id: Date.now().toString() };
-    // users.push(created);
-    // return created.id;
-}
+    return getUsers().insertOne(user)
+    .then((result) => {
+        console.log(result);
+        // result.ops[0]._id.toString()
+    });
+} // 오브젝트 받아다가 오브젝트 집어넣으면 끝
 
 export async function findById(id){
-    // return db.execute('select id from users where id =?', [id]).then((result) => result[0][0]);
+    return getUsers()
+    .find({_id: new ObjectID(id)})
+    .next()
+    .then(mapOptionalUser)
+}
 
-    return User.findByPk(id); // primary key를 찾아달라(primary key가 id면 가능하다)
+function mapOptionalUser(user){
+    return user ? { ...user, id: user._id.toString() } : user;
 }

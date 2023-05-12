@@ -11,18 +11,15 @@ export const isAuth = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1]; // 헤더에서 토큰값만 떼옴, verfication 하면 사용자
-    console.log(token);
     jwt.verify(
         token,
         config.jwt.secretKey, // 이전에는 .env에 있던 t0nP%yfzjeG6IkpVDlZJs@Rgq5u#^dka 라는 값이였음
         async (error, decoded) => {
             if(error){
-                console.log("222222");
-                return res.status(401).json(AUTH_ERROR);
+                return res.status(402).json(AUTH_ERROR);
             }
             const user = await userRepository.findById(decoded.id);
             if(!user){
-                console.log("333333");
                 return res.status(403).json(AUTH_ERROR);
             }
             req.userId = user.id;
